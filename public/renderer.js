@@ -295,8 +295,8 @@ class Renderer
 
     moveCamera(x, y)
     {
-        this.offsetX = x * 8 * this.scale - (this.canvas.width / 2) + this.scale * 4;
-        this.offsetY = y * 8 * this.scale - (this.canvas.height / 2) + this.scale * 4;
+        this.offsetX = x * 12 * this.scale - (this.canvas.width / 2) + this.scale * 6;
+        this.offsetY = y * 12 * this.scale - (this.canvas.height / 2) + this.scale * 6;
     }
 
 
@@ -427,8 +427,8 @@ class Renderer
     normalizePosition(x, y)
     {
         return {
-            x: Math.floor(x * 8 - this.offsetX) / this.width * 2 - 1,
-            y: Math.floor(y * 8 - this.offsetY) / this.height * 2 - 1,
+            x: Math.floor(x *12 - this.offsetX) / this.width * 2 - 1,
+            y: Math.floor(y * 12 - this.offsetY) / this.height * 2 - 1,
         };
     }
 
@@ -447,15 +447,15 @@ class Renderer
 
         this.detail = Math.ceil(1 / this.scale);
         
-        const tileHeightRadius = Math.ceil(this.canvas.height / 8 / this.scale /2) + this.detail + 1;
-        const tileWidthRadius = Math.ceil(this.canvas.width / 8 / this.scale / 2) + this.detail + 1;
+        const tileHeightRadius = Math.ceil(this.canvas.height / 12 / this.scale /2) + this.detail + 1;
+        const tileWidthRadius = Math.ceil(this.canvas.width / 12 / this.scale / 2) + this.detail + 1;
 
         let centerTileX = YOU.x;
         let centerTileY = YOU.y;
         if (!this.focusedOnPlayer)
         {
-            centerTileX = Math.floor(this.offsetX / 8 / this.scale) + tileWidthRadius;
-            centerTileY = Math.floor(this.offsetY / 8 / this.scale) + tileHeightRadius;
+            centerTileX = Math.floor(this.offsetX / 12 / this.scale) + tileWidthRadius;
+            centerTileY = Math.floor(this.offsetY / 12 / this.scale) + tileHeightRadius;
         }
 
         // This keeps tiles chosen consistent so that everything doesn't jitter when zoomed out.
@@ -761,6 +761,6 @@ div.arrows{width:30px !important;height:30px !important;}
 div.arrows > img{width:30px;}
 #bottom-box{z-index:2;position:relative;width:auto !important;}
 #world-time, #world-position{position:relative; z-index:2}
-#hotbar-box{z-index:2;position:relative;width:fit-content !important;}
+#hotbar-box{z-index:2;position:relative;width:max-content !important;}
 #canvas{z-index:1;position:absolute;left:0;right:0;top:0;bottom:0;}
 `;
