@@ -1,0 +1,53 @@
+#game-content {
+    display: flex !important;
+}
+
+div.mid-screencontainer {
+    width: 70% !important;
+    position:relative;
+}
+
+div.side-screencontainer {
+    width: 15% !important;
+}
+
+#arrow-box {
+    width: 114px !important;
+    height: 114px !important;
+}
+
+div.bottom-box-left-menu {
+    height: 98px !important;
+}
+
+div.arrows {
+    width: 30px !important;
+    height: 30px !important;
+}
+div.arrows > img {
+    width: 30px;
+}
+
+#bottom-box {
+    z-index: 2;
+    position: relative;
+    width: auto !important;
+}
+
+#world-time, #world-position {
+    position: relative;
+}
+
+#hotbar-box {
+    position: relative;
+    width: fit-content !important;
+}
+
+#canvas {
+    z-index:1;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
