@@ -560,13 +560,13 @@ class Renderer
             switch (obj.char)
             {
                 case WORLD.TILES.wood_block:
-                    this.dynamicTile(this, WORLD.TILES.wood_block, 0, 7, obj.x, obj.y, false, true );
+                    dynamicTile(this, WORLD.TILES.wood_block, 0, 7, obj.x, obj.y, false, true );
                     break;
                 case WORLD.TILES.scrap_block:
-                    this.dynamicTile(this, WORLD.TILES.scrap_block, 4, 7, obj.x, obj.y, false, true );
+                    dynamicTile(this, WORLD.TILES.scrap_block, 4, 7, obj.x, obj.y, false, true );
                     break;
                 case WORLD.TILES.steel_block:
-                    this.dynamicTile(this.WORLD.TILES.steel_block, 8, 7, obj.x, obj.y, false, true );
+                    dynamicTile(this.WORLD.TILES.steel_block, 8, 7, obj.x, obj.y, false, true );
                     break;
                 case WORLD.TILES.anchor:
                     this.drawSprite(7, 1, obj.x, obj.y);
