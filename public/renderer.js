@@ -337,7 +337,6 @@ class Renderer
             // const x = Math.floor(((e.clientX - rect.left) + this.offsetX) / this.scale / 16);
             // const y = Math.floor(((rect.bottom - e.clientY) + this.offsetY) / this.scale / 16);      
             // console.log(WORLD.getPerlin(x, y+5500, 10000),  WORLD.getPerlin(x, y, 25))
-            this.focusedOnPlayer = false;
             this.keydown = true;
         }
         else
@@ -353,6 +352,7 @@ class Renderer
         {
             return;
         }
+        this.focusedOnPlayer = false;
         this.offsetX -= e.movementX;
         this.offsetY += e.movementY;
     }
@@ -763,4 +763,5 @@ div.arrows > img{width:30px;}
 #world-time, #world-position{position:relative; z-index:2}
 #hotbar-box{z-index:2;position:relative;width:max-content !important;}
 #canvas{z-index:1;position:absolute;left:0;right:0;top:0;bottom:0;}
+#world-box{height:calc(100% - 250px);}
 `;
