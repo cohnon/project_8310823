@@ -540,7 +540,7 @@ class Renderer
         for (let i = 0; i < WORLD.otherPlayers.length; i++)
         {
             const obj = WORLD.otherPlayers[i];
-            // this.drawSprite(1, 2, obj.x, obj.y);
+            this.drawSprite(1, 2, obj.x, obj.y);
             if (obj.x == YOU.x && obj.y == YOU.y)
             {
                 playerWithPlayerCount++;
