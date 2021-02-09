@@ -1,7 +1,7 @@
 function main()
 {
     
-    const renderer = new Renderer('https://i.ibb.co/4Kxjp1X/spritesheet.png');
+    const renderer = new Renderer('https://i.ibb.co/NVM1Gxr/spritesheet.png');
 }
 
 main();

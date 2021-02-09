@@ -228,7 +228,11 @@ class Renderer
         });
 
         addEventListener('keydown', e => {
-            if (e.key == ' ')
+            if (YOU.state === 'int')
+            {
+                return;
+            }
+            if (e.key === ' ')
             {
                 e.preventDefault();
                 this.focusedOnPlayer = true;
@@ -236,7 +240,7 @@ class Renderer
                 this.curY = YOU.y;
                 this.scale = 2;
             }
-            else if (e.key =='t')
+            else if (e.key === 't')
             {
                 this.imgHTML.style.display = 'block';
                 this.imgHTML.click();
@@ -536,7 +540,7 @@ class Renderer
         for (let i = 0; i < WORLD.otherPlayers.length; i++)
         {
             const obj = WORLD.otherPlayers[i];
-            this.drawSprite(1, 2, obj.x, obj.y);
+            // this.drawSprite(1, 2, obj.x, obj.y);
             if (obj.x == YOU.x && obj.y == YOU.y)
             {
                 playerWithPlayerCount++;
@@ -589,7 +593,12 @@ class Renderer
                 case WORLD.TILES.sign_block:
                     this.drawSprite(10, 1, obj.x, obj.y);
                 case WORLD.TILES.city:
-                case WORLD.TILES.city:
+                    this.drawSprite(4, 1, x, y);
+                case WORLD.TILES.house:
+                    this.drawSprite(3, 1, x, y);
+                    break;
+                case '@':
+                    this.drawSprite(4, 2, obj.x, obj.y);
                     break;
                 default:
                     this.drawSprite(0, 0, obj.x, obj.y);
