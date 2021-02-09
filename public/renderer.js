@@ -523,7 +523,7 @@ class Renderer
         {
             const obj = WORLD.otherStumps[i];
             // Draw island or sand
-            if (WORLD.getPerlin(x, y + 5500, 10000) > 0.57) {
+            if (WORLD.getPerlin(obj.x, obj.y + 5500, 10000) > 0.57) {
                 this.drawSprite(2, 0, obj.x, obj.y);
             }
             else
