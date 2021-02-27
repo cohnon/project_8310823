@@ -3,6 +3,9 @@
 Utilise your gpu to run [big brain text game.](https://thetravelers.online/)
 Also textures
 
+<img src="./assets/bigzoop.png">
+<img src="./assets/boooogpooc.png">
+
 ## How to 'install'
 Copy paste the goods in out.js into the console
 
@@ -19,6 +22,8 @@ Copy paste the goods in out.js into the console
 Open assets/spritesheet.png in some drawing software.
 Draw over the 16x16 sprites with your own.
 Upload it while you have the game running with the T key.
+
+<img src="./assets/spritesheet.png">
 
 ## Download test environment
 
