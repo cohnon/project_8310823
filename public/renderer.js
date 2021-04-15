@@ -63,6 +63,11 @@ class Renderer
         });
 
         window.onresize = (e) => {
+            MOBILE.is = window.innerWidth <= 1200;
+            if (MOBILE.prev !== MOBILE.is) {
+                MOBILE.switch();
+            }
+            MOBILE.prev = MOBILE.is;
             this.resize();
         }
     }
