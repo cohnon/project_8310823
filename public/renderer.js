@@ -22,7 +22,7 @@ class Renderer
         this.width;
         this.height;
         this.currentPosition = 0;
-        this.scale = 2;
+        this.scale = 4;
         this.offsetX = 0;
         this.offsetY = 0;
         this.keydown = false;
@@ -58,10 +58,13 @@ class Renderer
             this.running = true;
             this.merge();
             this.initWebGl();
-            this.initEvents();
             this.start();
             requestAnimationFrame(t => this.update(t));
         });
+
+        window.onresize = (e) => {
+            this.resize();
+        }
     }
 
     /**
@@ -98,7 +101,8 @@ class Renderer
         // Sets up the actual rendering screen
         this.canvas = document.createElement('canvas');
         this.canvas.id = 'canvas';
-        this.parent = document.getElementsByClassName('mid-screencontainer')[0];
+        this.parent = document.getElementById('world-box');
+        this.parent.style.position = "relative";
         this.parent.insertBefore(this.canvas, null);
         this.webGl = this.canvas.getContext('webgl2');
 
@@ -200,56 +204,6 @@ class Renderer
         this.webGl.texImage2D(this.webGl.TEXTURE_2D, 0, this.webGl.RGBA, this.webGl.RGBA, this.webGl.UNSIGNED_BYTE, image);
     }
 
-    initEvents()
-    {
-        this.canvas.addEventListener('mousedown', e => this.mouseupdown(e));
-        addEventListener('mouseup', e => this.mouseupdown(e));
-        addEventListener('mousemove', e => this.mousemove(e));
-        addEventListener('resize', e => this.resize(e));
-        this.canvas.addEventListener('wheel', e => this.scroll(e));
-
-        this.imgHTML = document.createElement('input');
-        this.imgHTML.style.display = 'none';
-        this.imgHTML.type = 'file';
-        this.imgHTML.accept = 'image/*';
-        document.getElementsByTagName('body')[0].appendChild(this.imgHTML);
-        this.imgHTML.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!this.reader)
-            {
-                this.reader = new FileReader();
-                this.reader.onload = (e) => {
-                    this.spritesheet.src = e.target.result;
-                }
-            }
-    
-            
-            this.reader.readAsDataURL(file); // convert to base64 string
-        });
-
-        addEventListener('keydown', e => {
-            if (YOU.state === 'int')
-            {
-                return;
-            }
-            if (e.key === ' ')
-            {
-                e.preventDefault();
-                this.focusedOnPlayer = true;
-                this.curX = YOU.x;
-                this.curY = YOU.y;
-                this.scale = 2;
-            }
-            else if (e.key === 't')
-            {
-                this.imgHTML.style.display = 'block';
-                this.imgHTML.click();
-                this.imgHTML.style.display = 'none';
-            }
-        });
-       
-    }
-
     start()
     {
         // moves ''''''''camera''''''''''' to player
@@ -269,28 +223,25 @@ class Renderer
         // this.offsetY = 100* Math.sin(this.counter);
         
         // Follow player
-        if (this.focusedOnPlayer)
+        const speed = this.d_t / 500;
+        if (Math.abs(YOU.x - this.curX) < speed)
         {
-            const speed = this.d_t / 500;
-            if (Math.abs(YOU.x - this.curX) < speed)
-            {
-                this.curX = YOU.x;
-            }
-            else
-            {
-                this.curX -= (this.curX - YOU.x) * speed;
-            }
-            if (Math.abs(YOU.y - this.curY) < speed)
-            {
-                this.curY = YOU.y;
-            }
-            else
-            {
-                this.curY -= (this.curY - YOU.y) * speed;;
-            }
-    
-            this.moveCamera(this.curX, this.curY);
+            this.curX = YOU.x;
         }
+        else
+        {
+            this.curX -= (this.curX - YOU.x) * speed;
+        }
+        if (Math.abs(YOU.y - this.curY) < speed)
+        {
+            this.curY = YOU.y;
+        }
+        else
+        {
+            this.curY -= (this.curY - YOU.y) * speed;;
+        }
+
+        this.moveCamera(this.curX, this.curY);
 
 
         this.drawScene();
@@ -305,61 +256,6 @@ class Renderer
 
 
 
-     /***********/
-    /** INPUT **/
-    scroll(e)
-    {
-        e.preventDefault();
-        const rect = this.canvas.getBoundingClientRect();
-        const oldX = ((e.clientX - rect.left) + this.offsetX) / this.scale;
-        const oldY = ((rect.bottom - e.clientY) + this.offsetY) / this.scale;
-
-        this.scale += Math.sign(e.deltaY) / 10 * this.scale;
-        if (this.scale < 0.00001)
-        {
-            this.scale = 0.00001;
-        }
-
-        const newX = ((e.clientX - rect.left) + this.offsetX) / this.scale;
-        const newY = ((rect.bottom - e.clientY) + this.offsetY) / this.scale;
-
-        this.offsetY += (oldY - newY) * this.scale;
-        this.offsetX += (oldX - newX) * this.scale;
-    }
-
-    mouseupdown(e)
-    {
-        e.preventDefault();
-        if (e.button != 0 || e.target != this.canvas)
-        {
-            return;
-        }
-
-        if (e.type === 'mousedown')
-        {
-            // const rect = this.canvas.getBoundingClientRect();
-            // const x = Math.floor(((e.clientX - rect.left) + this.offsetX) / this.scale / 16);
-            // const y = Math.floor(((rect.bottom - e.clientY) + this.offsetY) / this.scale / 16);      
-            // console.log(WORLD.getPerlin(x, y+5500, 10000),  WORLD.getPerlin(x, y, 25))
-            this.keydown = true;
-        }
-        else
-        {
-            this.keydown = false;
-        }
-
-    }
-
-    mousemove(e)
-    {
-        if (!this.keydown)
-        {
-            return;
-        }
-        this.focusedOnPlayer = false;
-        this.offsetX -= e.movementX;
-        this.offsetY += e.movementY;
-    }
 
     resize()
     {
@@ -385,8 +281,8 @@ class Renderer
 
         const x1 = dstX * this.scale;
         const y1 = dstY * this.scale;
-        const x2 = (dstX + this.detail) * this.scale;
-        const y2 = (dstY + this.detail) * this.scale;
+        const x2 = (dstX + 1) * this.scale;
+        const y2 = (dstY + 1) * this.scale;
         
         const u1 = srcX + 0.01;
         const v1 = srcY + 0.99;
@@ -449,26 +345,14 @@ class Renderer
         this.webGl.clearColor(0, 0, 0, 0);
         this.webGl.clear(this.webGl.COLOR_BUFFER_BIT);
 
-        this.detail = Math.ceil(1 / this.scale);
+        this.scale = this.canvas.height / 30 / 12;
         
-        const tileHeightRadius = Math.ceil(this.canvas.height / 12 / this.scale /2) + this.detail + 1;
-        const tileWidthRadius = Math.ceil(this.canvas.width / 12 / this.scale / 2) + this.detail + 1;
-
         let centerTileX = YOU.x;
         let centerTileY = YOU.y;
-        if (!this.focusedOnPlayer)
-        {
-            centerTileX = Math.floor(this.offsetX / 12 / this.scale) + tileWidthRadius;
-            centerTileY = Math.floor(this.offsetY / 12 / this.scale) + tileHeightRadius;
-        }
 
-        // This keeps tiles chosen consistent so that everything doesn't jitter when zoomed out.
-        centerTileX = Math.floor(centerTileX / this.detail) * this.detail;
-        centerTileY = Math.floor(centerTileY / this.detail) * this.detail;
-
-        for (let x = centerTileX - tileWidthRadius; x < centerTileX + tileWidthRadius; x += this.detail)
+        for (let x = centerTileX - 18; x < centerTileX + 18; x ++)
         {
-            for (let y = centerTileY-tileHeightRadius; y < centerTileY+tileHeightRadius; y += this.detail)
+            for (let y = centerTileY-18; y < centerTileY+18; y ++)
             {
                 switch (WORLD.deriveTile(x, y))
                 {
@@ -658,14 +542,13 @@ const TILE_ENUM = {
 function dynamicTile(renderer, tile, u, v, x, y, hasHeight = false, isObj = false)
 {
     let value = 0;
-    let detail = renderer.detail;
     if (hasHeight)
     {
         const height = perlinInt(x, y);
-        WORLD.deriveTile(x  , y+detail) == tile && perlinInt(x, y+detail) < height + 1 ? value |= TILE_ENUM.n  : null;
-        WORLD.deriveTile(x+detail, y  ) == tile && perlinInt(x+detail, y) < height + 1 ? value |= TILE_ENUM.e  : null;
-        WORLD.deriveTile(x  , y-detail) == tile && perlinInt(x, y-detail) < height + 1 ? value |= TILE_ENUM.s  : null;
-        WORLD.deriveTile(x-detail, y  ) == tile && perlinInt(x-detail, y) < height + 1 ? value |= TILE_ENUM.w  : null;
+        WORLD.deriveTile(x  , y+1) == tile && perlinInt(x, y+1) < height + 1 ? value |= TILE_ENUM.n  : null;
+        WORLD.deriveTile(x+1, y  ) == tile && perlinInt(x+1, y) < height + 1 ? value |= TILE_ENUM.e  : null;
+        WORLD.deriveTile(x  , y-1) == tile && perlinInt(x, y-1) < height + 1 ? value |= TILE_ENUM.s  : null;
+        WORLD.deriveTile(x-1, y  ) == tile && perlinInt(x-1, y) < height + 1 ? value |= TILE_ENUM.w  : null;
     }
     else if (isObj)
     {
@@ -675,18 +558,18 @@ function dynamicTile(renderer, tile, u, v, x, y, hasHeight = false, isObj = fals
 
             if (obj.char != tile) continue;
 
-            (x == obj.x && y + detail == obj.y) ? value |= TILE_ENUM.n : null;
-            (x + detail == obj.x && y == obj.y) ? value |= TILE_ENUM.e : null;
-            (x == obj.x && y - detail == obj.y) ? value |= TILE_ENUM.s : null;
-            (x - detail == obj.x && y == obj.y) ? value |= TILE_ENUM.w : null;
+            (x == obj.x && y + 1 == obj.y) ? value |= TILE_ENUM.n : null;
+            (x + 1 == obj.x && y == obj.y) ? value |= TILE_ENUM.e : null;
+            (x == obj.x && y - 1 == obj.y) ? value |= TILE_ENUM.s : null;
+            (x - 1 == obj.x && y == obj.y) ? value |= TILE_ENUM.w : null;
         }
     }
     else
     {
-        WORLD.deriveTile(x  , y+detail) == tile ? value |= TILE_ENUM.n  : null;
-        WORLD.deriveTile(x+detail, y  ) == tile ? value |= TILE_ENUM.e  : null;
-        WORLD.deriveTile(x  , y-detail) == tile ? value |= TILE_ENUM.s  : null;
-        WORLD.deriveTile(x-detail, y  ) == tile ? value |= TILE_ENUM.w  : null;
+        WORLD.deriveTile(x  , y+1) == tile ? value |= TILE_ENUM.n  : null;
+        WORLD.deriveTile(x+1, y  ) == tile ? value |= TILE_ENUM.e  : null;
+        WORLD.deriveTile(x  , y-1) == tile ? value |= TILE_ENUM.s  : null;
+        WORLD.deriveTile(x-1, y  ) == tile ? value |= TILE_ENUM.w  : null;
     }
 
     switch (value)
@@ -761,16 +644,6 @@ const fragmentShaderSource = `#version 300 es
 `;
 
 const stylesSource = `
-#game-content{display:flex !important;}
-div.mid-screencontainer{width:70% !important;position:relative;}
-div.side-screencontainer{width:15% !important;}
-#arrow-box{width:114px !important;height:114px !important;}
-div.bottom-box-left-menu{height:98px !important;}
-div.arrows{width:30px !important;height:30px !important;}
-div.arrows > img{width:30px;}
-#bottom-box{z-index:2;position:relative;width:auto !important;}
-#world-time, #world-position{position:relative; z-index:2}
-#hotbar-box{z-index:2;position:relative;width:max-content !important;}
-#canvas{z-index:1;position:absolute;left:0;right:0;top:0;bottom:0;}
-#world-box{height:calc(100% - 250px);}
+#world-box{position:relative;}
+canvas{position:absolute;top:0;right:0;left:0;bottom:0;}
 `;
